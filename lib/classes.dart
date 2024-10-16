@@ -16,38 +16,62 @@ class Funcionario{
 
 class Manutencao extends Funcionario{
   Manutencao(String userNome, String senha) :super(userNome,senha); 
-  Map<String,int> estoque = Map.fromIterables(List.generate(5, (val)=>'iten$val'),List.generate(5, (val) => Random().nextInt(100)));
+  //Cria um estoque com nomes 'item0' a diante, com quantidades aleatorias de 0 a 100
+  Map<String,int> estoque = Map.fromIterables(List.generate(5, (val)=>'item$val'),List.generate(5, (val) => Random().nextInt(100)));
+  Map<String,int> registro = {};
   
   @override
   void opcoes() {
+    print('---------------------------------------------');
     print('1 - Solicitação de Materiais para Manutenção ');
     print('2 - Histórico de Consumo de Materiais');
+    print('---------------------------------------------');
     
     switch (input()) {
       case '1':
-        materialRequest(estoque);
+        materialRequest();
+        break;
+      case '2':
+        exibirHistorico();
         break;
       default:
-        opcoes();
+        opcoesBase();
         break;
     }
   }
 
-  void materialRequest(Map<String,int> itens){
-    itens.forEach((key,val)=> print('Iten: $key\nQuantidade disponivel: $val'));
+  void materialRequest(){
+    //Printa todos os itens e suas quantidades
+    estoque.forEach((key,val)=> print('Iten: $key\nQuantidade disponivel: $val\n'));
+    //Pede o item que o usuario quer e caso escreva sair, ele sai da função
     String item = input('Qual item deseja(sair): ')??'';
+
     if(item == 'sair'){
       opcoes();
-    }else if (itens.containsKey(item)) {
-      print('Quantidae disponivel: ${itens[item]}');
-      int quandtidadePedida = int.parse(input('Quantidade necessaria: ')!);
-      itens[item] = itens[item]! - quandtidadePedida;
-      print(itens);
-      materialRequest(itens);
+    }else if (estoque.containsKey(item)) {
+      print('Quantidade disponivel: ${estoque[item]}\n');
+      int quantidadePedida = int.parse(input('Quantidade necessaria: ')!);
+      
+      if (quantidadePedida > estoque[item]!) {
+        print('Quantidade invalida');
+        materialRequest();
+      }else{
+        registro.addAll({item:quantidadePedida});
+        estoque[item] = estoque[item]! - quantidadePedida;
+        materialRequest();
+      }
+      
     }else{
       print('item Indisponivel');
-      materialRequest(estoque);
+      materialRequest();
     }
+  }
+
+  void exibirHistorico(){
+    print('---------------------------');
+    registro.forEach((key,val)=> print('Item: $key | Quantidade: $val \n'));
+    print('---------------------------');
+    opcoes();
   }
 }
 
@@ -61,4 +85,3 @@ class Gerencia extends Funcionario{
   Gerencia(String userName, String senha) :super(userName, senha);
 
 }
-
