@@ -29,10 +29,16 @@ dynamic logar(Map<Map<String,String>,String> DB){
   if (DB.keys.any((element) => element.containsKey(userName.toLowerCase()) && element.containsValue(senha))) {
 
     //Pega o indice da chave na lista, para achar esse mesmo indice na lista de valores para achar o cargo do usuario
-    int indice = chaves.indexWhere((ele)=> ele.containsKey(userName) && ele.containsValue(senha));
-    print('Logado');
+    int indice = chaves.indexWhere((element)=> element.containsKey(userName) && element.containsValue(senha));
     //Chama a Função classSet para retornar a que classe o usuario pertence.
-    return classSet(values[indice], userName, senha);
+    Funcionario user = classSet(values[indice], userName, senha);
+    print(user.runtimeType);
+    if (classSet(values[indice], userName, senha).runtimeType == Funcionario) {
+      return null;
+    } else {
+      print('Logado');
+      return user;
+    }
 
   }else{
     print('User Name ou senha errados');
@@ -47,18 +53,23 @@ Funcionario classSet(String cargo, String userName, String senha){
     case '1':
       user = Manutencao(userName, senha);
       break;
+    case '2':
+      user = Almoxarife(userName, senha);
+      break;
     default:
-      user = Manutencao(userName, senha);
+      user = Funcionario(userName, senha);
+      print("usuario não existe");
       break;
   }
-  return user;
+    return user; 
 }
 
 String? opcoesBase(){
   print('--------------------------');
   print('1-Cadastro');
   print('2-Logar');
-  String? resposta = input();
+  String? resposta = input("opção: ");
   print('--------------------------');
   return resposta;
 }
+
