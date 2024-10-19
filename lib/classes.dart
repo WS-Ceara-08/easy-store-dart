@@ -80,7 +80,7 @@ class Manutencao extends Funcionario{
 }
 
 
-// class almoxarife 
+// class almoxarife   
 class Almoxarife extends Funcionario{
   Almoxarife(String userName, String senha) :super(userName, senha);
   // ele vai guarda todos os dados do produto nesse map como quantidade id entre outros
