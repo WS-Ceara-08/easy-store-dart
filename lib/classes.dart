@@ -86,6 +86,7 @@ class Almoxarife extends Funcionario{
   // ele vai guarda todos os dados do produto nesse map como quantidade id entre outros
   
   Map<String, Map<String, dynamic>> dados_detalhes_produto = {};  
+  Map<String?, int> lixeira_avaria = {};
 
   @override
   Map<String, int> get estoque => super.estoque;
@@ -113,7 +114,7 @@ class Almoxarife extends Funcionario{
 
     //adiciona tudo dentro do estoque OBS: não tire o opcoes pois ele vai da um bug onde os produtos de analisar_produtos não vão aparecer 
     // esse bug foi dificiel de se entender porem pedi ajuda e resolvemos rapido
-    estoque.addAll({nome_do_produto:codigo_do_item});
+    estoque.addAll({nome_do_produto:codigo_do_item});  //tu quer o codigo ou a quantidade?
     print(estoque);
     opcoes();
   }
@@ -138,8 +139,52 @@ class Almoxarife extends Funcionario{
       pesquisar_produto();
     }
   }
-  
+// lixeira dos itens que foram danificados 
+  void item_avaria(){
+    String? opcoes_lixeria = input("seu produto estar no estoque?[1]não [2]sim digite somente numeros: ");
 
+    if(opcoes_lixeria == "1"){
+      String? nome_produto_avaria = input("digite o nome do produto danificado: ");
+      String? quant_prod = input("quantiade de produtos danificados: ");
+
+      int quantidade_de_produtos_danificados = int.parse(quant_prod!);
+
+      lixeira_avaria.addAll({nome_produto_avaria:quantidade_de_produtos_danificados});
+      print(lixeira_avaria);
+      opcoes();
+    }else{
+      print("coloque sim ou não");
+      opcoes();
+    }
+
+    if(opcoes_lixeria == "2"){
+      String? colocar_item_lixeira = input("digite o nome do produto: ");
+      String? colocaid = input("qual a quantidade: ");
+      int  colocar_id_item_avaria =  int.parse(colocaid!);
+      if(estoque.containsKey(colocar_item_lixeira) && estoque.containsValue(colocar_id_item_avaria) ){
+        // precisa colocar o cod pra ele tirar diretamente do BD pois se feito agora vai da aquele bug e não da pra fazer agora = api
+        estoque.remove(colocar_item_lixeira);
+        lixeira_avaria.addAll({colocar_item_lixeira:colocar_id_item_avaria});
+        print("${colocar_item_lixeira} foi removido");
+        print(lixeira_avaria);
+        opcoes();
+      }
+      else{
+        print("coloque sim ou não");
+        opcoes();
+      }
+    }
+  }
+// isso é so provisorio enquato a api não fica pronta 
+  void ver_quem_modificou(){
+    if(lixeira_avaria.isNotEmpty){
+      print(userName);print(dados_detalhes_produto["data"]);
+      opcoes();
+    }else{
+      print("ninguem modificou nada");
+      opcoes();
+    }
+  }
     
 
   @override
@@ -147,20 +192,25 @@ class Almoxarife extends Funcionario{
     print('---------------------------------------------');
     // adicionar detalhes como código do item, fornecedor, quantidade e data
     print('1 - Registrar Novos Itens ');
-    print('2 - Ver as Saidas de itens ');
+    print('2 - teve avaria?(produto danificado) ');
     print('3 - pesquisar e analisar produtos');
+    print("4 - ver quem fez modificações");
     print('---------------------------------------------');
-    // Função de busca para facilitar o gerenciamento de itens
+
     switch(input()){
       case "1":
         add_estoque();
         break;
-      // em breve ver registros de saidas de produtos
+      
       case "2":
+        item_avaria();
       break;
 
       case "3":
       pesquisar_produto();
+      break;
+      case "4":
+        ver_quem_modificou();
       break;
 
       default:
