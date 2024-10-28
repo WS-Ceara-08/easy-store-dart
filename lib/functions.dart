@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:easystoragedart/classes.dart';
+import 'classes.dart';
 
 String? input([String? texto]){
   stdout.write(texto??'');

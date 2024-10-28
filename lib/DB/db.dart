@@ -1,5 +1,19 @@
 import 'package:mysql1/mysql1.dart';
 
 class Db {
+  MySqlConnection? dataBase;
 
+  Future<MySqlConnection?> conectar() async{
+   var configuracaoDb = ConnectionSettings(host:,port: 3, user: ,db:  );
+   if(dataBase == null){
+    return await MySqlConnection.connect(configuracaoDb);
+  }
+    // ignore: unused_element
+    Future<void> fechar() async{
+      if(dataBase != null){
+        return dataBase!.close();
+      }
+    }
+    return null;
+  }
 }
