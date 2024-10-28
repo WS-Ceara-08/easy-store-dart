@@ -4,7 +4,8 @@ class Db {
   MySqlConnection? dataBase;
 
   Future<MySqlConnection?> conectar() async{
-   var configuracaoDb = ConnectionSettings(host:,port: 3, user: ,db:  );
+    // coloque suas config do bd
+   var configuracaoDb = ConnectionSettings(host:,port: , user: ,db:  );
    if(dataBase == null){
     return await MySqlConnection.connect(configuracaoDb);
   }
